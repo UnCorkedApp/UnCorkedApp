@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:ems="10"
         android:inputType="textEmailAddress"
-        android:hint="username" >
+        android:hint="@string/username" >
 
         <requestFocus />
     </EditText>
@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:ems="10"
-        android:hint="password"
+        android:hint="@string/password"
         android:inputType="textPassword" />
 
     <Button
@@ -35,7 +35,7 @@
         android:layout_alignLeft="@+id/username"
         android:layout_below="@+id/password"
         android:layout_marginTop="15dp"
-        android:text="Register" />
+        android:text="@string/register" />
 
     <Button
         android:id="@+id/login"
@@ -44,6 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/username"
         android:layout_alignTop="@+id/register"
-        android:text="Login" />
+        android:text="@string/login" />
 
 </RelativeLayout>
