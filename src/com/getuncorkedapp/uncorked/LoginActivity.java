@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				usernameField.setText("You clicked login");
+				usernameField.setText(ParseKeys.APPID);
 			}
 		});
         registerButton.setOnClickListener(new OnClickListener() {
