@@ -1,4 +1,4 @@
-package com.getuncorkedapp.uncorked;
+package com.getuncorkedapp.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
