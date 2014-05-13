@@ -30,3 +30,7 @@ proguard/
 
 #Mac Files
 .DS_Store
+
+#Eclipse
+.metadata/
+.settings/
