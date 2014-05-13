@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.getuncorkedapp.ParseKeys;
+import com.getuncorkedapp.utils.ParseKeys;
 import com.getuncorkedapp.R;
 
 public class LoginActivity extends Activity {
