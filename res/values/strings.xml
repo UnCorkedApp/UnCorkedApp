@@ -6,6 +6,11 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
-    
-
+    <string name="wine_name">Name</string>
+    <string name="winery">Winery</string>
+	<string name="year">Year</string>
+	<string name="description">Description</string>
+	<string name="add_new_entry">Add</string>
+	<string name="cancel">Cancel</string>
+	
 </resources>

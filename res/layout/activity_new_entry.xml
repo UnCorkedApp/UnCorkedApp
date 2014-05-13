@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+
+    <EditText
+        android:id="@+id/wine_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="58dp"
+        android:ems="10"
+        android:hint="@string/wine_name"
+        android:inputType="text" >
+
+    </EditText>
+
+   <EditText
+        android:id="@+id/winery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/wine_name"
+        android:ems="10"
+        android:hint="@string/winery"
+        android:inputType="text" >
+
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/winery"
+        android:ems="10"
+        android:hint="@string/year"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/description"
+        android:hint="@string/description"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/year"
+        android:ems="10"
+        android:inputType="textLongMessage" />
+
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/description" />
+
+    <Button
+        android:id="@+id/add_new_entry"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="34dp"
+        android:layout_toLeftOf="@+id/cancel"
+        android:text="@string/add_new_entry" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/add_new_entry"
+        android:layout_alignBottom="@+id/add_new_entry"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:text="@string/cancel" />
+
+</RelativeLayout>
