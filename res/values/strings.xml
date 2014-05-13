@@ -12,5 +12,6 @@
 	<string name="description">Description</string>
 	<string name="add_new_entry">Add</string>
 	<string name="cancel">Cancel</string>
+	<string name="test">test</string>
 	
 </resources>
