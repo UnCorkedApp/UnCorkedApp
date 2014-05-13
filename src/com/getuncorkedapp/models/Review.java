@@ -1,39 +1,52 @@
 package com.getuncorkedapp.models;
 
-public class Review {
-	private int id;
-	private String comment;
-	private int rating;
+import java.io.Serializable;
 
-	public Review(int id, String comment, int rating) {
-		super();
-		this.id = id;
-		this.comment = comment;
-		this.rating = rating;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
+@ParseClassName("Review")
+public class Review extends ParseObject implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public Review() {
+		// leave empty
 	}
-
-	public int getId() {
-		return id;
+	
+	public User getUser() {
+		return (User) getParseObject("user");
 	}
-
-	public void setId(int id) {
-		this.id = id;
+	
+	public void setUser(User user) {
+		put("user", user);
 	}
-
-	public String getComment() {
-		return comment;
+	
+	public Wine getWine() {
+		return (Wine) getParseObject("wine");
 	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
+	
+	public void setWine(Wine wine) {
+		put("wine", wine);
 	}
 
 	public int getRating() {
-		return rating;
+		return getInt("rating");
 	}
 
 	public void setRating(int rating) {
-		this.rating = rating;
+		put("rating", rating);
+	}
+	
+	public String getComment() {
+		return getString("comment");
+	}
+
+	public void setComment(String comment) {
+		put("comment", comment);
 	}
 
 }
