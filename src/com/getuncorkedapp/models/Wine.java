@@ -3,6 +3,7 @@ package com.getuncorkedapp.models;
 import java.io.Serializable;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 @ParseClassName("Wine")
@@ -53,11 +54,19 @@ public class Wine extends ParseObject implements Serializable {
 		put("type", type);
 	}
 	
-	public String getImage() {
-		return getString("image");
+	public String getImageURL() {
+		return getString("imageURL");
 	}
 	
-	public void setImage(String image) {
-		put("image", image);
+	public void setImageURL(String image) {
+		put("imageURL", image);
+	}
+	
+	public ParseFile getImageFile() {
+		return getParseFile("imageFile");
+	}
+	
+	public void setImageFile(ParseFile file) {
+		put("imageFile", file);
 	}
 }
