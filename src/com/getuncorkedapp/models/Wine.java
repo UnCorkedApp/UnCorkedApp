@@ -1,68 +1,72 @@
 package com.getuncorkedapp.models;
 
-public class Wine {
-	private int id;
-	private String name;
-	private int year;
-	private String type;
-	private String winery;
-	private String imageId;
+import java.io.Serializable;
 
-	public Wine(int id, String name, int year, String type, String winery) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.year = year;
-		this.type = type;
-		this.winery = winery;
+import com.parse.ParseClassName;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+
+@ParseClassName("Wine")
+public class Wine extends ParseObject implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public Wine() {
+		// leave empty
 	}
-
-	public int getId() {
-		return id;
+	
+	public String getId() {
+		return getString("objectId");
 	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	
 	public String getName() {
-		return name;
+		return getString("name");
 	}
-
+	
 	public void setName(String name) {
-		this.name = name;
+		put("name", name);
 	}
-
-	public int getYear() {
-		return year;
+	
+	public Integer getYear() {
+		return getInt("year");
 	}
-
-	public void setYear(int year) {
-		this.year = year;
+	
+	public void setYear(Integer year) {
+		put("year", year);
 	}
-
+	
+	public String getWinary() {
+		return getString("winary");
+	}
+	
+	public void setWinary(String winary) {
+		put("winary", winary);
+	}
+	
 	public String getType() {
-		return type;
+		return getString("type");
 	}
-
+	
 	public void setType(String type) {
-		this.type = type;
+		put("type", type);
 	}
-
-	public String getWinery() {
-		return winery;
+	
+	public String getImageURL() {
+		return getString("imageURL");
 	}
-
-	public void setWinery(String winery) {
-		this.winery = winery;
+	
+	public void setImageURL(String image) {
+		put("imageURL", image);
 	}
-
-	public String getImageId() {
-		return imageId;
+	
+	public ParseFile getImageFile() {
+		return getParseFile("imageFile");
 	}
-
-	public void setImageId(String imageId) {
-		this.imageId = imageId;
+	
+	public void setImageFile(ParseFile file) {
+		put("imageFile", file);
 	}
-
 }
