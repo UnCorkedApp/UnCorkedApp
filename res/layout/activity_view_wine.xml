@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/wineName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageView
-            android:id="@+id/imageView1"
+        <com.getuncorkedapp.utils.WebImageView
+            android:id="@+id/wineIcon"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.98"
@@ -31,21 +31,21 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/wineryAndYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/winery_and_year"
                 android:textSize="@dimen/winery_and_year_size" />
 
             <RatingBar
-                android:id="@+id/ratingBar1"
+                android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/reviewList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>

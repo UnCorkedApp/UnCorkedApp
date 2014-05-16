@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +27,7 @@ public class WineListActivity extends Activity {
 	
 	private ListView wineList;
 	private WineAdapter wineAdapter;
+	public final static String WINE_EXTRA = "com.getuncorkedapp.WINE";
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,10 @@ public class WineListActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Wine wine = wineAdapter.getItem(position);
-				Toast.makeText(WineListActivity.this, "Clicked " + wine.getName(), Toast.LENGTH_SHORT).show();
+				//Toast.makeText(WineListActivity.this, "Clicked " + wine.getName(), Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent().setClass(parent.getContext(), ViewWineActivity.class);
+                intent.putExtra(WINE_EXTRA, wine);
+                startActivity(intent);
 			}
         	
         });

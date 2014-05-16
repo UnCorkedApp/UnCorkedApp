@@ -34,7 +34,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.getuncorkedapp.activities.ViewWine"
+            android:name="com.getuncorkedapp.activities.ViewWineActivity"
             android:label="@string/app_name" >
         </activity>
     </application>
