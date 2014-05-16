@@ -1,25 +1,14 @@
 package com.getuncorkedapp.models;
 
-import java.io.Serializable;
-
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 @ParseClassName("Wine")
-public class Wine extends ParseObject implements Serializable {
+public class Wine extends ParseObject {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	public Wine() {
 		// leave empty
-	}
-	
-	public String getId() {
-		return getString("objectId");
 	}
 	
 	public String getName() {
@@ -69,4 +58,5 @@ public class Wine extends ParseObject implements Serializable {
 	public void setImageFile(ParseFile file) {
 		put("imageFile", file);
 	}
+
 }

@@ -40,7 +40,7 @@ public class WineAdapter extends ArrayAdapter<Wine> {
         winary.setText( wine.getWinary() );
         type.setText( wine.getType() );
         icon.setImageUrl( wine.getImageFile().getUrl() );
-        Log.i("imageURL", wine.getImageFile().getUrl() );
+        Log.i("WineAdapter", wine.getObjectId() );
 
         return rowView;
 
