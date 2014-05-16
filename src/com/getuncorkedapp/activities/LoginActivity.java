@@ -32,7 +32,8 @@ public class LoginActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				usernameField.setText(ParseKeys.APPID);
+				Intent wineList = new Intent(LoginActivity.this, WineListActivity.class);
+				startActivity(wineList);
 			}
 		});
         registerButton.setOnClickListener(new OnClickListener() {

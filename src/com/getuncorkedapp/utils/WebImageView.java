@@ -3,7 +3,9 @@ package com.getuncorkedapp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -14,6 +16,9 @@ import java.net.URL;
  * Created by loran on 4/28/14.
  */
 public class WebImageView extends ImageView {
+	
+	Bitmap bitmap;
+	
     public WebImageView(Context context) {
         super(context);
     }
@@ -26,15 +31,28 @@ public class WebImageView extends ImageView {
         super(context, attrs, defStyle);
     }
 
-    public void setImageUrl(String urlString) {
-        try {
-            URL url = new URL(urlString);
-            Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            WebImageView.this.setImageBitmap(bitmap);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+	public void setImageUrl(String url) {
+		new RetriveImageTask().execute(url);
+    }
+    
+    class RetriveImageTask extends AsyncTask<String, Void, Bitmap> {
+		
+		protected void onPostExecute(Bitmap result) {
+			WebImageView.this.setImageBitmap(result);
+		}
+
+		@Override
+		protected Bitmap doInBackground(String... urls) {
+			try {
+	            URL url = new URL((String) urls[0]);
+	            return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+	        } catch (MalformedURLException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+			return null;
+		}
+    	
     }
 }
