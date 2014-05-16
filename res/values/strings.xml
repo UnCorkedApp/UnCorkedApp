@@ -13,5 +13,8 @@
 	<string name="add_new_entry">Add</string>
 	<string name="cancel">Cancel</string>
 	<string name="test">test</string>
+	<string name="view_wind_title_default">Wine Name</string>
+	<string name="winery_and_year">Winery (Year)</string>
+	<string name="wine_img_content_desc">This is an image of the wine you are viewing.</string>
 	
 </resources>
