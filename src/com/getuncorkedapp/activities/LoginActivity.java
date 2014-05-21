@@ -8,8 +8,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.getuncorkedapp.utils.ParseKeys;
 import com.getuncorkedapp.R;
+import com.getuncorkedapp.models.User;
+import com.getuncorkedapp.utils.ParseKeys;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseObject;
 
 public class LoginActivity extends Activity {
 	
@@ -44,6 +48,12 @@ public class LoginActivity extends Activity {
 				startActivity(second);
 			}
 		});
+        
+        
+//        Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
+//        ParseAnalytics.trackAppOpened( getIntent() );
+//        ParseObject.registerSubclass( User.class );
+        
     }
 
 }
