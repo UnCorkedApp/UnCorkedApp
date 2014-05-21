@@ -51,15 +51,6 @@ public class RegisterActivity extends Activity {
 		ParseObject.registerSubclass(User.class);
 		// ParseObject.create(User.class);
 
-		// ParseQuery<User> userQuery = ParseQuery.getQuery("User");
-		// userQuery.findInBackground(new FindCallback<User>() {
-		//
-		// @Override
-		// public void done(List<User> arg0, ParseException arg1) {
-		// // TODO Auto-generated method stub
-		//
-		// }
-		// });
 
 		usernameField = (EditText) findViewById(R.id.username);
 		passwordField = (EditText) findViewById(R.id.password);
@@ -72,47 +63,51 @@ public class RegisterActivity extends Activity {
 				Log.i("Register", "Register buttom has been clicked.");
 				CharSequence email = (CharSequence) emailField.getText();
 				String username = usernameField.getText().toString();
-				String pass = "";
-				try {
-					pass = hashPassword(passwordField.getText().toString());
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-				if (checkAccount(username, email.toString())
-						&& isValidEmail(email)) {
-					// Toast.makeText(RegisterContext, "Valid Account",
-					// Toast.LENGTH_SHORT).show();
-					Log.e("email", email + "");
-					Log.e("Username", username);
-					Log.e("Password", pass);
+				String pass = passwordField.getText().toString();
 
-					user.put("username", username);
-					user.put("email", email.toString());
-					user.put("password", pass);
-					user.saveInBackground();
-
-					AlertDialog.Builder confirmation = new AlertDialog.Builder(
-							RegisterContext);
-					confirmation.setMessage("You have succesfully Register.");
-					confirmation.setCancelable(false);
-					confirmation.setPositiveButton("Ok",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-
-					AlertDialog msgpop = confirmation.create();
-					msgpop.show();
-				} else {
-					Toast.makeText(RegisterContext, "Invalid Input",
+				if (passwordField.getText().toString().isEmpty()
+						|| username.isEmpty()) {
+					Toast.makeText(RegisterContext, "Fill in the empty field.",
 							Toast.LENGTH_SHORT).show();
-				}
+				} else {
+					if (!isValidEmail(email)) {
+						Toast.makeText(RegisterContext,
+								"Input a correct email.", Toast.LENGTH_SHORT)
+								.show();
+					} else if (checkAccount(username, email.toString())) {
+						try {
+							pass = hashPassword(pass);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+						Log.e("email", email + "");
+						Log.e("Username", username);
+						Log.e("Password", pass);
 
+						user.put("username", username);
+						user.put("email", email.toString());
+						user.put("password", pass);
+						user.saveInBackground();
+
+						AlertDialog.Builder confirmation = new AlertDialog.Builder(
+								RegisterContext);
+						confirmation
+								.setMessage("You have succesfully Register.");
+						confirmation.setCancelable(false);
+						confirmation.setPositiveButton("Ok",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+
+						AlertDialog msgpop = confirmation.create();
+						msgpop.show();
+					}
+				}
 			}
 		});
-
 	}
 
 	public final boolean isValidEmail(CharSequence s) {
@@ -182,34 +177,43 @@ public class RegisterActivity extends Activity {
 		return check;
 	}
 
-	public boolean passwordCheck(String pass) {
-		boolean upper = false;
-		boolean lower = false;
-		boolean number = false;
-		while (true) {
-			if (pass.length() < 7) {
-				System.out.println("must be at least 7 characters long");
-			} else {
-				for (char c : pass.toCharArray()) {
-					if (Character.isUpperCase(c)) {
-						upper = true;
-					} else if (Character.isLowerCase(c)) {
-						lower = true;
-					} else if (Character.isDigit(c)) {
-						number = true;
-					}
-				}
-				if (!upper) {
-					Toast.makeText(this, "must contain at least one uppercase character", Toast.LENGTH_SHORT).show();
-				} else if (!lower) {
-					Toast.makeText(this, "must contain at least one lowercase character", Toast.LENGTH_SHORT).show();
-				} else if (!number) {
-					Toast.makeText(this, "must contain at least one number", Toast.LENGTH_SHORT).show();				} else {
-					break;
-				}
-			}
-		}
-		return upper && lower && number;
-	}
+	// public boolean passwordCheck(String pass) {
+	// boolean upper = false;
+	// boolean lower = false;
+	// boolean number = false;
+	// while (true) {
+	// if (pass.length() < 7) {
+	// Toast.makeText(this,
+	// "must have at least 7 character.",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// } else {
+	// for (char c : pass.toCharArray()) {
+	// if (Character.isUpperCase(c)) {
+	// upper = true;
+	// } else if (Character.isLowerCase(c)) {
+	// lower = true;
+	// } else if (Character.isDigit(c)) {
+	// number = true;
+	// }
+	// }
+	// if (!upper) {
+	// Toast.makeText(this,
+	// "must contain at least one uppercase character",
+	// Toast.LENGTH_SHORT).show();
+	// } else if (!lower) {
+	// Toast.makeText(this,
+	// "must contain at least one lowercase character",
+	// Toast.LENGTH_SHORT).show();
+	// } else if (!number) {
+	// Toast.makeText(this, "must contain at least one number",
+	// Toast.LENGTH_SHORT).show();
+	// } else {
+	// break;
+	// }
+	// }
+	// }
+	// return upper && lower && number;
+	// }
 
 }
