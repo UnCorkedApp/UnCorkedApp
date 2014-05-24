@@ -34,9 +34,9 @@ public class WineListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wine_list);
         
-        Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
+//        Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
         ParseAnalytics.trackAppOpened( getIntent() );
-        ParseObject.registerSubclass( Wine.class );
+//        ParseObject.registerSubclass( Wine.class );
         
         wineList = (ListView) findViewById(R.id.wineList);
         wineAdapter = new WineAdapter(this, new ArrayList<Wine>() );

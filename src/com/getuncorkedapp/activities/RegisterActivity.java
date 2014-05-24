@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,9 +20,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.getuncorkedapp.R;
+import com.getuncorkedapp.application.ParseApp;
 import com.getuncorkedapp.models.User;
-import com.getuncorkedapp.utils.ParseKeys;
-import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -33,10 +33,10 @@ public class RegisterActivity extends Activity {
 	private EditText passwordField;
 	private EditText emailField;
 	private Button registerButton;
-	Context RegisterContext;
-	ParseObject user;
+	private Context RegisterContext;
+	private ParseObject user;
 
-	protected String mailCheck = "";
+	private String mailCheck = "";
 	private String userCheck = "";
 
 	@Override
@@ -44,12 +44,16 @@ public class RegisterActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
 		RegisterContext = this;
+		
+		ParseApp app = (ParseApp) getApplication();
+		user = app.getUser();
 
-		Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
+//		Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
 		ParseAnalytics.trackAppOpened(getIntent());
-		user = new ParseObject("User");
-		ParseObject.registerSubclass(User.class);
+//		user = new ParseObject("User");
+//		ParseObject.registerSubclass(User.class);
 		// ParseObject.create(User.class);
+		
 
 
 		usernameField = (EditText) findViewById(R.id.username);
@@ -80,9 +84,9 @@ public class RegisterActivity extends Activity {
 						} catch (UnsupportedEncodingException e) {
 							e.printStackTrace();
 						}
-						Log.e("email", email + "");
-						Log.e("Username", username);
-						Log.e("Password", pass);
+//						Log.e("email", email + "");
+//						Log.e("Username", username);
+//						Log.e("Password", pass);
 
 						user.put("username", username);
 						user.put("email", email.toString());
@@ -99,6 +103,8 @@ public class RegisterActivity extends Activity {
 									public void onClick(DialogInterface dialog,
 											int id) {
 										dialog.cancel();
+										startActivity(new Intent(RegisterContext, LoginActivity.class));
+										finish();
 									}
 								});
 
@@ -110,7 +116,7 @@ public class RegisterActivity extends Activity {
 		});
 	}
 
-	public final boolean isValidEmail(CharSequence s) {
+	private final boolean isValidEmail(CharSequence s) {
 		if (TextUtils.isEmpty(s)) {
 			Toast.makeText(this, "Email Field must be filled.",
 					Toast.LENGTH_SHORT).show();
@@ -122,7 +128,7 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	public String hashPassword(String pass) throws UnsupportedEncodingException {
+	private String hashPassword(String pass) throws UnsupportedEncodingException {
 		byte[] bytesOfMessage = pass.getBytes("UTF-8");
 
 		MessageDigest md;
@@ -130,21 +136,15 @@ public class RegisterActivity extends Activity {
 		try {
 			md = MessageDigest.getInstance("MD5");
 			byte[] hashedpass = md.digest(bytesOfMessage);
-			// for(byte i : hashedpass)
-			// Log.e("BYTES", i+"");
+
 			hashed = new String(hashedpass, "UTF-8");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-
-		// for(byte a: hashed.getBytes())
-		// Log.e("STRING", a+"");
-
-		// Log.e("Password", hashed);
 		return hashed;
 	}
 
-	public boolean checkAccount(final String username, final String email) {
+	private boolean checkAccount(final String username, final String email) {
 		Boolean check = true;
 		List<User> data = null;
 		ParseQuery<User> userQuery = ParseQuery.getQuery("User");
@@ -162,8 +162,6 @@ public class RegisterActivity extends Activity {
 			}
 		}
 
-		Log.e("CheckingMail", mailCheck);
-		Log.e("CheckingUsername", userCheck);
 		if (mailCheck.equalsIgnoreCase(email)) {
 			Toast.makeText(this, "Email already taken.", Toast.LENGTH_SHORT)
 					.show();
@@ -181,7 +179,7 @@ public class RegisterActivity extends Activity {
 	// boolean upper = false;
 	// boolean lower = false;
 	// boolean number = false;
-	// while (true) {
+
 	// if (pass.length() < 7) {
 	// Toast.makeText(this,
 	// "must have at least 7 character.",
@@ -212,7 +210,7 @@ public class RegisterActivity extends Activity {
 	// break;
 	// }
 	// }
-	// }
+
 	// return upper && lower && number;
 	// }
 
