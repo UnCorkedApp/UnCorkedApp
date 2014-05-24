@@ -94,14 +94,14 @@ public class ViewWineActivity extends Activity {
 	}
 	
 	public void findWine(String id) {
-        ParseQuery<Wine> query = ParseQuery.getQuery(Wine.class);
-        query.setCachePolicy(CachePolicy.CACHE_THEN_NETWORK);
-        query.getInBackground(id, new GetCallback<Wine>() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Wine");
+        query.fromLocalDatastore();
+        query.getInBackground(id, new GetCallback<ParseObject>() {
 
 			@Override
-			public void done(Wine wine, ParseException error) {
+			public void done(ParseObject win, ParseException error) {
 				if (wine != null) {
-					wine = (Wine) wine;
+					wine = (Wine) win;
 					Log.i("Wine", wine.getName() );
 					fillInWine(wine);
 				} else {
