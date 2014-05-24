@@ -10,17 +10,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.getuncorkedapp.R;
 import com.getuncorkedapp.models.Wine;
 import com.getuncorkedapp.models.WineAdapter;
-import com.getuncorkedapp.utils.ParseKeys;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseQuery.CachePolicy;
 
 public class WineListActivity extends Activity {
 	
@@ -34,10 +32,8 @@ public class WineListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wine_list);
         
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
         ParseAnalytics.trackAppOpened( getIntent() );
-        ParseObject.registerSubclass( Wine.class );
+//        ParseObject.registerSubclass( Wine.class );
         
         wineList = (ListView) findViewById(R.id.wineList);
         wineAdapter = new WineAdapter(this, new ArrayList<Wine>() );
