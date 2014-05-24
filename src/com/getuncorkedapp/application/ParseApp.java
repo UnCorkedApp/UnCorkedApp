@@ -19,6 +19,7 @@ public class ParseApp extends Application {
 		user = new ParseObject("User");
 		ParseObject.registerSubclass(User.class);
 		ParseObject.registerSubclass( Wine.class );
+		Parse.enableLocalDatastore(this);
 		
 	}
 

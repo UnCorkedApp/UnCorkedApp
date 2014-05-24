@@ -17,22 +17,21 @@ import com.getuncorkedapp.models.WineAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseQuery.CachePolicy;
 
 public class WineListActivity extends Activity {
 	
 	private ListView wineList;
 	private WineAdapter wineAdapter;
 	public final static String WINE_ID_EXTRA = "com.getuncorkedapp.WINE_ID";
-	public final String ALL_WINES = "allWines";
+	public final String ALL_WINES = "AllWines";
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wine_list);
         
-//        Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
         ParseAnalytics.trackAppOpened( getIntent() );
 //        ParseObject.registerSubclass( Wine.class );
         
@@ -59,15 +58,21 @@ public class WineListActivity extends Activity {
 
 	public void fetchData() {
 		
-        ParseQuery<Wine> query = ParseQuery.getQuery(Wine.class);
-        query.setCachePolicy(CachePolicy.CACHE_THEN_NETWORK);
-        query.findInBackground(new FindCallback<Wine>() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Wine");
+        query.findInBackground(new FindCallback<ParseObject>() {
 
         	@Override
-            public void done( List<Wine> wines, ParseException error ) {
+            public void done( List<ParseObject> wines, ParseException error ) {
                 if(wines != null){
                     wineAdapter.clear();
-                    wineAdapter.addAll(wines);
+                    for (ParseObject wine : wines) {
+                    	wineAdapter.add( (Wine) wine );
+                    	Log.i("WineListActivity", wine.getString("name"));
+                    }
+                    // remove previously stored wines
+                    ParseObject.unpinAllInBackground(ALL_WINES);
+                    // store local cache
+                    ParseObject.pinAllInBackground(ALL_WINES, wines);
                 } else {
                 	Log.e("WineListActivity", error.getLocalizedMessage() );
                 	return;
