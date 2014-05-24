@@ -10,15 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.getuncorkedapp.R;
 import com.getuncorkedapp.models.Wine;
 import com.getuncorkedapp.models.WineAdapter;
-import com.getuncorkedapp.utils.ParseKeys;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQuery.CachePolicy;
 
