@@ -23,8 +23,8 @@ public class ParseApp extends Application {
 		
 	}
 
-	public ParseObject getUser() {
-		return user;
+	public User getUser() {
+		return (User) user;
 	}
 
 	public void setUser(ParseObject user) {

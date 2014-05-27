@@ -55,7 +55,7 @@ public class NewEntryActivity extends Activity {
 	
 	 public void addListenerOnRatingBar() {
 		 
-			ratingBar = (RatingBar) findViewById(R.id.ratingBar1);
+			ratingBar = (RatingBar) findViewById(R.id.wine_review_rating);
 			//txtRatingValue = (TextView) findViewById(R.id.txtRatingValue);
 		 
 			//if rating value is changed,
