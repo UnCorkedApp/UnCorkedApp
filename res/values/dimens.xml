@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="wine_view_title">50dp</dimen>
+    <dimen name="winery_and_year_size">25dp</dimen>
+</resources>

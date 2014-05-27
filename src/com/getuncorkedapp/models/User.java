@@ -1,49 +1,56 @@
 package com.getuncorkedapp.models;
 
-public class User {
-	private int id;
-	private String username;
-	private String password;
-	private String email;
+import java.io.Serializable;
 
-	public User(int id, String username, String password, String email) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.email = email;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
+@ParseClassName("User")
+public class User extends ParseObject implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public User() {
+		// leave empty
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	
+	public String getId() {
+		return getString("objectId");
 	}
 
 	public String getUsername() {
-		return username;
+		return getString("username");
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		put("username", username);
 	}
 
 	public String getPassword() {
-		return password;
+		return getString("password");
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		put("password", password);
 	}
 
 	public String getEmail() {
-		return email;
+		return getString("email");
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		put("email", email);
+	}
+	
+	public Boolean isEmailVerified() {
+		return getBoolean("emailVerified");
+	}
+	
+	public void setEmailVerified(Boolean bool) {
+		put("emailVerified", bool);
 	}
 
 }
