@@ -74,7 +74,7 @@ public class ViewWineActivity extends Activity {
 		wineReviewList = (ListView) findViewById(R.id.reviewList);
 		addReviewButton = (Button) findViewById(R.id.new_review_button);
 		
-		addReviewButton.setOnClickListener((android.view.View.OnClickListener) new ReviewButtonListener());
+		addReviewButton.setOnClickListener(new ReviewButtonListener());
 		wineReviewList.setAdapter(new ReviewListAdpter(getApplicationContext(), reviewList));
 		
 	}
@@ -111,18 +111,18 @@ public class ViewWineActivity extends Activity {
 	
 	public void findWine(String id) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Wine");
-        query.fromLocalDatastore();
+//        query.fromLocalDatastore();
         query.getInBackground(id, new GetCallback<ParseObject>() {
 
 			@Override
 			public void done(ParseObject win, ParseException error) {
-				if (wine != null) {
+				if (win != null) {
 					wine = (Wine) win;
 					Log.i("Wine", wine.getName() );
 					fillInWine(wine);
 					getReviews(wine);
 				} else {
-					Log.e("ParseException", error.getLocalizedMessage() );
+					Log.e("ParseException", error.getLocalizedMessage(), error );
 				}
 			}
         });
@@ -140,7 +140,7 @@ public class ViewWineActivity extends Activity {
 			public void done(List<Review> list, ParseException e) {
 				for(Review r : list)
 				{
-					if(r.getUser().getUsername().equals(((ParseApp) getApplication()).getUser().getUsername()))
+					if(r.getUser().getUsername().equals(((ParseApp) getApplication()).getUser().get("username")))
 					{
 						list.remove(r);
 						list.add(0, r);
@@ -163,13 +163,15 @@ public class ViewWineActivity extends Activity {
 			wineryYearSB.append( wine.getWinary() + ")" );
 		}
 		wineryAndYear.setText( wineryYearSB.toString() );
+		
+		
 	}
 	
-	private class ReviewButtonListener implements OnClickListener
+	private class ReviewButtonListener implements android.view.View.OnClickListener
 	{
 
 		@Override
-		public void onClick(DialogInterface dialog, int which) {
+		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			
 		}
