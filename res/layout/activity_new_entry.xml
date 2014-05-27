@@ -23,14 +23,14 @@
         android:text="@string/add_new_entry" />
 
     <EditText
-        android:id="@+id/description"
+        android:id="@+id/review"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:layout_above="@+id/ratingBar1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:ems="10"
-        android:hint="@string/description"
+        android:hint="@string/review"
         android:inputType="textMultiLine" >
 
         <requestFocus />
@@ -40,7 +40,7 @@
         android:id="@+id/year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/description"
+        android:layout_above="@+id/review"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:ems="10"

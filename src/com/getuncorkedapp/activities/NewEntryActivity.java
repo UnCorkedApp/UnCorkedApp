@@ -1,6 +1,10 @@
 package com.getuncorkedapp.activities;
 
+import java.io.ByteArrayOutputStream;
+
 import com.getuncorkedapp.utils.BitmapProcessor;
+import com.getuncorkedapp.utils.ParseKeys;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,13 +23,16 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
 
 import com.getuncorkedapp.R;
+import com.parse.Parse;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 
 public class NewEntryActivity extends Activity {
 
 	private EditText wineName;
 	private EditText winery;
 	private EditText year;
-	private EditText description;
+	private EditText review;
 	private Button add;
 	private Button cancel;
 	private RatingBar ratingBar;
@@ -36,19 +43,20 @@ public class NewEntryActivity extends Activity {
 	private Button buttonImage;
 
 	private Bitmap image;
-
+	
 	private static final int IMAGE_PICK = 1;
 	private static final int IMAGE_CAPTURE = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_entry);
 
 		wineName = (EditText) findViewById(R.id.wine_name);
 		winery = (EditText) findViewById(R.id.winery);
 		year = (EditText) findViewById(R.id.year);
-		description = (EditText) findViewById(R.id.description);
+		review = (EditText) findViewById(R.id.review);
 		add = (Button) findViewById(R.id.add_new_entry);
 		cancel = (Button) findViewById(R.id.cancel);
 
@@ -65,9 +73,48 @@ public class NewEntryActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent second = new Intent(NewEntryActivity.this,
-						LoginActivity.class);
-				startActivity(second);
+				
+				String wineNameTxt = wineName.getText().toString();
+				String wineryTxt = winery.getText().toString();
+				String yearTxt = year.getText().toString();
+				int yearInt = Integer.parseInt(yearTxt);
+				String reviewTxt = review.getText().toString();
+				String rating = String.valueOf(ratingBar.getRating());
+				Double ratingD = Double.parseDouble(rating);
+				
+				// Locate the image 
+                Bitmap bitmap = image;
+                // Convert it to byte
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // Compress image to lower quality scale 1 - 100
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
+ 
+                // Create the ParseFile
+                ParseFile file = new ParseFile( wineNameTxt + ".png", image);
+                // Upload the image into Parse Cloud
+                file.saveInBackground();
+ 
+                // Create a New Class called "ImageUpload" in Parse
+                ParseObject upload = new ParseObject("Wine");
+ 
+                // Create a column named "ImageFile" and insert the image
+                upload.put("imageFile", file);
+                upload.put("name", wineNameTxt);
+                upload.put("winary", wineryTxt);
+                upload.put("year", yearInt);
+                
+                ParseObject upload2 = new ParseObject("Review");
+                upload2.put("comment", reviewTxt);
+                upload2.put("rating", ratingD);
+                
+                // Create the class and the columns
+                upload.saveInBackground();
+                upload2.saveInBackground();
+                // Show a simple toast message
+                Toast.makeText(NewEntryActivity.this, "Info Uploaded",
+                        Toast.LENGTH_SHORT).show();
+				 
 			}
 		});
 		cancel.setOnClickListener(new OnClickListener() {
@@ -127,11 +174,11 @@ public class NewEntryActivity extends Activity {
 	 * @param newImage
 	 */
 	private void updateImageView(Bitmap newImage) {
-		BitmapProcessor bitmapProcessor = new BitmapProcessor(newImage, 1000,
-				1000, 90);
+		BitmapProcessor bitmapProcessor = new BitmapProcessor(newImage, 100,
+				100);
 
-		this.image = bitmapProcessor.getBitmap();
-		this.imageView.setImageBitmap(this.image);
+		image = bitmapProcessor.getBitmap();
+		this.imageView.setImageBitmap(image);
 	}
 
 	/**

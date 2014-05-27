@@ -16,42 +16,18 @@ public class BitmapProcessor {
 	public BitmapProcessor(Bitmap bitmap, int maxWidth, int maxHeight) {
 		this._bitmap = bitmap;
 		
-		this.resizeIfBiggerThan(maxWidth, maxHeight);
-	}
-	
-	public BitmapProcessor(Bitmap bitmap, int maxWidth, int maxHeight, int hue) {
-		this._bitmap = bitmap;
-		this.resizeIfBiggerThan(maxWidth, maxHeight);
-		
+		this.resizeIfSmallerThan(maxWidth, maxHeight);
 	}
 	
 	
-	public Bitmap resizeIfBiggerThan(int maxWidth, int maxHeight) {
+	public Bitmap resizeIfSmallerThan(int maxWidth, int maxHeight) {
 		int   originalWidth 	= this._bitmap.getWidth();
 		int   originalHeight 	= this._bitmap.getHeight();
-		int   newWidth 			= originalWidth;
-		int   newHeight 		= originalHeight;
-		float ratio 			= 1.0f;
-		
-		if (originalWidth >= maxWidth || originalHeight >= maxHeight) {
-			if (originalWidth >= maxWidth) {
-				ratio 		= originalWidth / (float) maxWidth;
-				newWidth 	= maxWidth;
-				newHeight 	= (int) (originalHeight / ratio);
-			}
-			
-			if (newHeight >= maxHeight) {
-				ratio 		= newHeight / (float) maxHeight;
-				newHeight 	= maxHeight;
-				newWidth  	= (int) (newWidth / ratio);
-				if (newWidth >= maxWidth) {
-					ratio 		= newWidth / (float) maxWidth;
-					newWidth 	= maxWidth;
-					newHeight 	= (int) (newHeight / ratio); 
-				}
-			}
-			this._bitmap = Bitmap.createScaledBitmap(this._bitmap, newWidth, newHeight, true);
-		}
+		int   newWidth 			= (int) (originalWidth * 2.95);
+		int   newHeight 		= (int) (originalHeight * 2.95);		
+
+		this._bitmap = Bitmap.createScaledBitmap(this._bitmap, newWidth, newHeight, true);
+
 		return this._bitmap;
 	}
 	
