@@ -31,6 +31,7 @@ public class ParseApp extends Application {
 	}
 
 	public ParseObject getUser() {
+		user = ParseObject.create("User");
 		return user;
 	}
 
