@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/new_review_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/add_review_title"
+        android:textSize="@dimen/add_review_title" />
+
+    <TextView
+        android:id="@+id/new_review_wine_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/view_wind_title_default"
+        android:textSize="@dimen/new_review_wine_name_size" />
+
+    <RatingBar
+        android:id="@+id/new_review_rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:stepSize="1" />
+
+    <TextView
+        android:id="@+id/new_review_comment_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/new_review_comment_title"
+        android:textSize="@dimen/new_review_comment_title_size" />
+
+    <EditText
+        android:id="@+id/new_review_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:textSize="@dimen/new_review_comment_text_size" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/add_review_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_review_button_text" />
+
+</LinearLayout>
