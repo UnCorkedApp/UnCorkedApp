@@ -151,12 +151,12 @@ public class RegisterActivity extends Activity {
 		try {
 			data = userQuery.find();
 		} catch (ParseException e) {
-			e.printStackTrace();
+			Log.e("RegisterActivity", e.getLocalizedMessage(),e);
 		}
 
 		for (User u : data) {
 			if (email.equalsIgnoreCase(u.getEmail())
-					&& username.equalsIgnoreCase(u.getUsername())) {
+					|| username.equalsIgnoreCase(u.getUsername())) {
 				mailCheck = u.getEmail();
 				userCheck = u.getUsername();
 			}
