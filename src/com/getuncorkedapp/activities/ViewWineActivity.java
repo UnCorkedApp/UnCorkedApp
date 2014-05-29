@@ -14,7 +14,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,6 +46,7 @@ public class ViewWineActivity extends Activity {
 	private String wineId;
 	private Wine wine;
 	private ArrayList<Review> reviewList;
+	private float reviewScore;
 	
 	private TextView wineName;
 	private WebImageView wineIcon;
@@ -51,6 +54,7 @@ public class ViewWineActivity extends Activity {
 	private StringBuilder wineryYearSB = new StringBuilder();
 	private ListView wineReviewList;
 	private Button addReviewButton;
+	private RatingBar wineRating;
 	
 	
 	/* (non-Javadoc)
@@ -73,6 +77,15 @@ public class ViewWineActivity extends Activity {
 		wineryAndYear = (TextView) findViewById(R.id.wineryAndYear);
 		wineReviewList = (ListView) findViewById(R.id.reviewList);
 		addReviewButton = (Button) findViewById(R.id.new_review_button);
+		wineRating = (RatingBar) findViewById(R.id.view_wine_rating_bar);
+		
+		wineRating.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return true;
+			}
+		});
+		wineRating.setFocusable(false);
 		
 		addReviewButton.setOnClickListener(new ReviewButtonListener());
 		wineReviewList.setAdapter(new ReviewListAdpter(getApplicationContext(), reviewList));
@@ -138,6 +151,7 @@ public class ViewWineActivity extends Activity {
 			
 			@Override
 			public void done(List<Review> list, ParseException e) {
+				int reviewSum = 0;
 				for(Review r : list)
 				{
 					if(r.getUser().getUsername().equals(((ParseApp) getApplication()).getUser().get("username")))
@@ -145,8 +159,11 @@ public class ViewWineActivity extends Activity {
 						list.remove(r);
 						list.add(0, r);
 					}
+					reviewSum += r.getRating();
 				}
 				
+				reviewScore = ((float) reviewSum) / list.size();
+				wineRating.setRating(reviewScore);
 				reviewList = new ArrayList<Review>(list);
 				wineReviewList.postInvalidate();
 			}

@@ -1,42 +1,24 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.getuncorkedapp"
-    android:versionCode="1"
-    android:versionName="1.0" >
-
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="19" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <application
-        android:name= "com.getuncorkedapp.application.ParseApp"
-        android:allowBackup="true"
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest android:versionCode="1" android:versionName="1.0"
+    package="com.getuncorkedapp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <application android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" android:theme="@style/AppTheme">
+        android:label="@string/app_name"
+        android:name="com.getuncorkedapp.application.ParseApp" android:theme="@style/AppTheme">
         <activity android:label="@string/app_name" android:name="com.getuncorkedapp.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.getuncorkedapp.activities.RegisterActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.getuncorkedapp.activities.NewEntryActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".activities.WineListActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.getuncorkedapp.activities.ViewWineActivity"
-            android:label="@string/app_name" >
-        </activity>
+        <activity android:label="@string/app_name" android:name="com.getuncorkedapp.activities.RegisterActivity"/>
+        <activity android:label="@string/app_name" android:name="com.getuncorkedapp.activities.NewEntryActivity"/>
+        <activity android:label="@string/app_name"
+            android:name=".activities.WineListActivity" android:screenOrientation="portrait"/>
+        <activity android:label="@string/app_name" android:name="com.getuncorkedapp.activities.ViewWineActivity"/>
+        <activity android:label="@string/app_name" android:name="com.getuncorkedapp.activities.AddReviewActivity"/>
     </application>
 </manifest>

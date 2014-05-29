@@ -19,5 +19,8 @@
 	<string name="review_user_default">User</string>
 	<string name="wine_review_default">This is a wine review.</string>
 	<string name="review_button_text">New Review</string>
+	<string name="add_review_title">Add Review</string>
+	<string name="new_review_comment_title">Comment</string>
+	<string name="add_review_button_text">Add Review</string>
 	
 </resources>

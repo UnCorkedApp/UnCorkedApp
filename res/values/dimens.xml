@@ -2,4 +2,8 @@
 <resources>
     <dimen name="wine_view_title">50dp</dimen>
     <dimen name="winery_and_year_size">25dp</dimen>
+    <dimen name="add_review_title">50dp</dimen>
+    <dimen name="new_review_wine_name_size">35dp</dimen>
+    <dimen name="new_review_comment_title_size">35dp</dimen>
+    <dimen name="new_review_comment_text_size">25dp</dimen>
 </resources>

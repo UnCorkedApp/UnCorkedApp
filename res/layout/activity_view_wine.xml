@@ -39,9 +39,10 @@
                 android:textSize="@dimen/winery_and_year_size" />
 
             <RatingBar
-                android:id="@+id/ratingBar"
+                android:id="@+id/view_wine_rating_bar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:stepSize="0.5" />
         </LinearLayout>
     </LinearLayout>
 
