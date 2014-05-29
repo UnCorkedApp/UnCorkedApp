@@ -1,5 +1,6 @@
 package com.getuncorkedapp.application;
 
+import com.getuncorkedapp.models.Review;
 import com.getuncorkedapp.models.User;
 import com.getuncorkedapp.models.Wine;
 import com.getuncorkedapp.utils.ParseKeys;
@@ -11,15 +12,21 @@ import android.app.Application;
 public class ParseApp extends Application {
 
 	private ParseObject user;
+	private ParseObject wine;
+	private ParseObject reviewParse;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
 		user = new ParseObject("User");
+		wine = new ParseObject("Wine");
+		reviewParse = new ParseObject("Review");
 		ParseObject.registerSubclass(User.class);
 		ParseObject.registerSubclass( Wine.class );
+		ParseObject.registerSubclass( Review.class );
 		Parse.enableLocalDatastore(this);
+		
 		
 	}
 
@@ -27,10 +34,26 @@ public class ParseApp extends Application {
 		return user;
 	}
 
-	public void setUser(ParseObject user) {
+	public void setUser(ParseObject user) {	
 		this.user = user;
 	}
 	
+	public ParseObject getWine() {
+		ParseObject wine = ParseObject.create("Wine");
+		return wine;
+	}
+
+	public void setWine(ParseObject wine) {
+		this.wine = wine;
+	}
 	
+	public ParseObject getReviewParse() {
+		ParseObject reviewParse = ParseObject.create("Review");
+		return reviewParse;
+	}
+
+	public void setReviewParse(ParseObject reviewParse) {
+		this.reviewParse = reviewParse;
+	}
 	
 }

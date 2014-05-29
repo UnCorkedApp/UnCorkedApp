@@ -23,6 +23,7 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
 
 import com.getuncorkedapp.R;
+import com.getuncorkedapp.application.ParseApp;
 import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -36,6 +37,8 @@ public class NewEntryActivity extends Activity {
 	private Button add;
 	private Button cancel;
 	private RatingBar ratingBar;
+	private ParseObject wine;
+	private ParseObject reviewParse;
 
 	// Image variables
 	private ImageView imageView;
@@ -49,8 +52,12 @@ public class NewEntryActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
+		
 		super.onCreate(savedInstanceState);
+		ParseApp app = (ParseApp) getApplication();
+		wine = app.getWine();
+		reviewParse = app.getReviewParse();
+				
 		setContentView(R.layout.activity_new_entry);
 
 		wineName = (EditText) findViewById(R.id.wine_name);
@@ -96,24 +103,28 @@ public class NewEntryActivity extends Activity {
                 file.saveInBackground();
  
                 // Create a New Class called "ImageUpload" in Parse
-                ParseObject upload = new ParseObject("Wine");
+                //ParseObject upload = new ParseObject("Wine");
  
                 // Create a column named "ImageFile" and insert the image
-                upload.put("imageFile", file);
-                upload.put("name", wineNameTxt);
-                upload.put("winary", wineryTxt);
-                upload.put("year", yearInt);
+                wine.put("imageFile", file);
+                wine.put("name", wineNameTxt);
+                wine.put("winary", wineryTxt);
+                wine.put("year", yearInt);
                 
-                ParseObject upload2 = new ParseObject("Review");
-                upload2.put("comment", reviewTxt);
-                upload2.put("rating", ratingD);
+               // ParseObject upload2 = new ParseObject("Review");
+                reviewParse.put("comment", reviewTxt);
+                reviewParse.put("rating", ratingD);
                 
                 // Create the class and the columns
-                upload.saveInBackground();
-                upload2.saveInBackground();
+                wine.saveInBackground();
+                reviewParse.saveInBackground();
                 // Show a simple toast message
                 Toast.makeText(NewEntryActivity.this, "Info Uploaded",
                         Toast.LENGTH_SHORT).show();
+                
+                Intent second = new Intent(NewEntryActivity.this,
+						WineListActivity.class);
+				startActivity(second);
 				 
 			}
 		});
@@ -122,7 +133,7 @@ public class NewEntryActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent second = new Intent(NewEntryActivity.this,
-						LoginActivity.class);
+						WineListActivity.class);
 				startActivity(second);
 			}
 		});
