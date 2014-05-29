@@ -35,7 +35,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
 		loginContext = this;
 
 		usernameField = (EditText) findViewById(R.id.username);
@@ -56,17 +56,27 @@ public class LoginActivity extends Activity {
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
-				if (checkAccount(username, password)) {
-					Toast.makeText(loginContext, "You have Login Successfully", Toast.LENGTH_SHORT).show();
-					Intent wineList = new Intent(LoginActivity.this,
-							WineListActivity.class);
-					startActivity(wineList);
-					finish();
-				}else{
-					usernameField.setText("");
-					passwordField.setText("");
-					Toast.makeText(loginContext, "Username or Password is wrong.", Toast.LENGTH_SHORT).show();
-				}
+				if (!username.isEmpty()) {
+					if (checkAccount(username, password)) {
+						Toast.makeText(loginContext,
+								"You have Login Successfully",
+								Toast.LENGTH_SHORT).show();
+						Intent wineList = new Intent(LoginActivity.this,
+								WineListActivity.class);
+						startActivity(wineList);
+						finish();
+					} else {
+						usernameField.setText("");
+						passwordField.setText("");
+						passwordField.clearFocus();
+						Toast.makeText(loginContext,
+								"Username or Password is wrong.",
+								Toast.LENGTH_SHORT).show();
+					}
+				} else
+					Toast.makeText(loginContext,
+							"You must input your login information.",
+							Toast.LENGTH_SHORT).show();
 			}
 		});
 		registerButton.setOnClickListener(new OnClickListener() {
@@ -96,12 +106,15 @@ public class LoginActivity extends Activity {
 				user = u;
 			}
 		}
-
-		if (((String) user.get("password")).equalsIgnoreCase(password) && ((String) user.get("username")).equalsIgnoreCase(username)) {
-			check = true;
-			ParseApp app = (ParseApp) getApplication();
-			app.setUser(user);
-		} 
+		if (!(user == null)) {
+			if (((String) user.get("password")).equalsIgnoreCase(password)
+					&& ((String) user.get("username"))
+							.equalsIgnoreCase(username)) {
+				check = true;
+				ParseApp app = (ParseApp) getApplication();
+				app.setUser(user);
+			}
+		}
 		return check;
 	}
 

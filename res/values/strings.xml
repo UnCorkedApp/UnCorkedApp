@@ -9,7 +9,7 @@
     <string name="wine_name">Name</string>
     <string name="winery">Winery</string>
 	<string name="year">Year</string>
-	<string name="description">Description</string>
+	<string name="review">Review</string>
 	<string name="add_new_entry">Add</string>
 	<string name="cancel">Cancel</string>
 	<string name="test">test</string>
