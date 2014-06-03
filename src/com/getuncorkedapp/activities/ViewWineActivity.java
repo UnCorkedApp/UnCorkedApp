@@ -43,15 +43,15 @@ import com.parse.ParseRelation;
 /**
  * @author Alex
  * @author Loran
- *
+ * 
  */
 public class ViewWineActivity extends Activity {
-	
+
 	private String wineId;
 	private Wine wine;
 	private ArrayList<Review> reviewList;
 	private float reviewScore;
-	
+
 	private TextView wineName;
 	private WebImageView wineIcon;
 	private TextView wineryAndYear;
@@ -59,30 +59,34 @@ public class ViewWineActivity extends Activity {
 	private ListView wineReviewList;
 	private Button addReviewButton;
 	private RatingBar wineRating;
-	
-	
-	/* (non-Javadoc)
+	private ReviewListAdpter reviewAdapter;
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_wine);
-		
+
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		wineId = extras.getString(WineListActivity.WINE_ID_EXTRA);
 		Log.i("ViewWineActivity", wineId);
 		findWine(wineId);
 		reviewList = new ArrayList<Review>();
-		
+
 		wineName = (TextView) findViewById(R.id.wineName);
 		wineIcon = (WebImageView) findViewById(R.id.wineIcon);
 		wineryAndYear = (TextView) findViewById(R.id.wineryAndYear);
 		wineReviewList = (ListView) findViewById(R.id.reviewList);
 		addReviewButton = (Button) findViewById(R.id.new_review_button);
 		wineRating = (RatingBar) findViewById(R.id.view_wine_rating_bar);
-		
+		reviewAdapter = new ReviewListAdpter(getApplicationContext(),
+				reviewList);
+
 		wineRating.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -90,13 +94,15 @@ public class ViewWineActivity extends Activity {
 			}
 		});
 		wineRating.setFocusable(false);
-		
+
 		addReviewButton.setOnClickListener(new ReviewButtonListener());
-		wineReviewList.setAdapter(new ReviewListAdpter(getApplicationContext(), reviewList));
-		
+		wineReviewList.setAdapter(reviewAdapter);
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
@@ -106,7 +112,9 @@ public class ViewWineActivity extends Activity {
 
 	}
 
-	/* (non-Javadoc) 
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onPause()
 	 */
 	@Override
@@ -116,7 +124,9 @@ public class ViewWineActivity extends Activity {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onStop()
 	 */
 	@Override
@@ -125,166 +135,175 @@ public class ViewWineActivity extends Activity {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public void findWine(String id) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Wine");
-//        query.fromLocalDatastore();
-        query.getInBackground(id, new GetCallback<ParseObject>() {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Wine");
+		// query.fromLocalDatastore();
+		query.getInBackground(id, new GetCallback<ParseObject>() {
 
 			@Override
 			public void done(ParseObject win, ParseException error) {
 				if (win != null) {
 					wine = (Wine) win;
-					Log.i("Wine", wine.getName() );
+					Log.i("Wine", wine.getName());
 					fillInWine(wine);
-					//scaleImage();
+					// scaleImage();
 					getReviews(wine);
 				} else {
-					Log.e("ParseException", error.getLocalizedMessage(), error );
+					Log.e("ParseException", error.getLocalizedMessage(), error);
 				}
-			}
-        });
-    }
-	
-	public void getReviews(Wine wine)
-	{
-		ParseRelation<Review> relation = wine.getRelation("reviews");
-		ParseQuery<Review> query = relation.getQuery();
-		query.addDescendingOrder("updatedAt");
-		
-		query.findInBackground(new FindCallback<Review>() {
-			
-			@Override
-			public void done(List<Review> list, ParseException e) {
-				int reviewSum = 0;
-				for(Review r : list)
-				{
-					if(r.getUser().getUsername().equals(((ParseApp) getApplication()).getUser().get("username")))
-					{
-						list.remove(r);
-						list.add(0, r);
-					}
-					reviewSum += r.getRating();
-				}
-				
-				reviewScore = ((float) reviewSum) / list.size();
-				wineRating.setRating(reviewScore);
-				reviewList = new ArrayList<Review>(list);
 			}
 		});
 	}
-	
+
+	public void getReviews(Wine wine) {
+		Log.i("Get Reviews", "Called");
+		ParseRelation<Review> relation = wine.getRelation("reviews");
+		ParseQuery<Review> query = relation.getQuery();
+		query.addDescendingOrder("updatedAt");
+
+		query.findInBackground(new FindCallback<Review>() {
+
+			@Override
+			public void done(List<Review> list, ParseException e) {
+				if (e == null) {
+					int reviewSum = 0;
+					for (Review r : list) {
+						Log.i("Add Review to Array Adapter", "Review " + r.toString());
+						if (r.getUser()
+								.getUsername()
+								.equals(((ParseApp) getApplication()).getUser()
+										.get("username"))) {
+							reviewAdapter.insert(r, 0);
+						} else {
+							reviewAdapter.add(r);
+						}
+						reviewSum += r.getRating();
+					}
+					reviewScore = ((float) reviewSum) / list.size();
+					wineRating.setRating(reviewScore);
+				} else {
+					Log.e("Get Reviews Excep", e.getLocalizedMessage(), e);
+				}
+			}
+		});
+	}
+
 	public void fillInWine(Wine wine) {
 		wineName.setText(wine.getName());
-		wineIcon.setImageUrl( wine.getImageFile().getUrl() );
-		wineryYearSB.append( wine.getWinary() + "(");
-		if ( wine.getYear() == 0) {
+		wineIcon.setImageUrl(wine.getImageFile().getUrl());
+		wineryYearSB.append(wine.getWinary() + "(");
+		if (wine.getYear() == 0) {
 			wineryYearSB.append("N/A" + ")");
 		} else {
-			wineryYearSB.append( wine.getWinary() + ")" );
+			wineryYearSB.append(wine.getWinary() + ")");
 		}
-		wineryAndYear.setText( wineryYearSB.toString() );
-		
-		
+		wineryAndYear.setText(wineryYearSB.toString());
+
 	}
-	
-	private class ReviewButtonListener implements android.view.View.OnClickListener
-	{
+
+	private class ReviewButtonListener implements
+			android.view.View.OnClickListener {
 
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
-	private void scaleImage()
-	{
-	    // Get the ImageView and its bitmap
-	    WebImageView view = (WebImageView) findViewById(R.id.wineIcon);
-	    Drawable drawing = view.getDrawable();
-	    if (drawing == null) {
-	        return; // Checking for null & return, as suggested in comments
-	    }
-	    Bitmap bitmap = ((BitmapDrawable)drawing).getBitmap();
 
-	    // Get current dimensions AND the desired bounding box
-	    int width = bitmap.getWidth();
-	    int height = bitmap.getHeight();
-	    int bounding = dpToPx(250);
-	    Log.i("Test", "original width = " + Integer.toString(width));
-	    Log.i("Test", "original height = " + Integer.toString(height));
-	    Log.i("Test", "bounding = " + Integer.toString(bounding));
+	private void scaleImage() {
+		// Get the ImageView and its bitmap
+		WebImageView view = (WebImageView) findViewById(R.id.wineIcon);
+		Drawable drawing = view.getDrawable();
+		if (drawing == null) {
+			return; // Checking for null & return, as suggested in comments
+		}
+		Bitmap bitmap = ((BitmapDrawable) drawing).getBitmap();
 
-	    // Determine how much to scale: the dimension requiring less scaling is
-	    // closer to the its side. This way the image always stays inside your
-	    // bounding box AND either x/y axis touches it.  
-	    float xScale = ((float) bounding) / width;
-	    float yScale = ((float) bounding) / height;
-	    float scale = xScale;
-	    Log.i("Test", "xScale = " + Float.toString(xScale));
-	    Log.i("Test", "yScale = " + Float.toString(yScale));
-	    Log.i("Test", "scale = " + Float.toString(scale));
+		// Get current dimensions AND the desired bounding box
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		int bounding = dpToPx(250);
+		Log.i("Test", "original width = " + Integer.toString(width));
+		Log.i("Test", "original height = " + Integer.toString(height));
+		Log.i("Test", "bounding = " + Integer.toString(bounding));
 
-	    // Create a matrix for the scaling and add the scaling data
-	    Matrix matrix = new Matrix();
-	    matrix.postScale(scale, scale);
+		// Determine how much to scale: the dimension requiring less scaling is
+		// closer to the its side. This way the image always stays inside your
+		// bounding box AND either x/y axis touches it.
+		float xScale = ((float) bounding) / width;
+		float yScale = ((float) bounding) / height;
+		float scale = xScale;
+		Log.i("Test", "xScale = " + Float.toString(xScale));
+		Log.i("Test", "yScale = " + Float.toString(yScale));
+		Log.i("Test", "scale = " + Float.toString(scale));
 
-	    // Create a new bitmap and convert it to a format understood by the ImageView 
-	    Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-	    width = scaledBitmap.getWidth(); // re-use
-	    height = scaledBitmap.getHeight(); // re-use
+		// Create a matrix for the scaling and add the scaling data
+		Matrix matrix = new Matrix();
+		matrix.postScale(scale, scale);
+
+		// Create a new bitmap and convert it to a format understood by the
+		// ImageView
+		Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,
+				matrix, true);
+		width = scaledBitmap.getWidth(); // re-use
+		height = scaledBitmap.getHeight(); // re-use
 		BitmapDrawable result = new BitmapDrawable(getResources(), scaledBitmap);
-	    Log.i("Test", "scaled width = " + Integer.toString(width));
-	    Log.i("Test", "scaled height = " + Integer.toString(height));
+		Log.i("Test", "scaled width = " + Integer.toString(width));
+		Log.i("Test", "scaled height = " + Integer.toString(height));
 
-	    // Apply the scaled bitmap
-	    view.setImageDrawable(result);
+		// Apply the scaled bitmap
+		view.setImageDrawable(result);
 
-	    // Now change ImageView's dimensions to match the scaled image
-	    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams(); 
-	    params.width = width;
-	    params.height = height;
-	    view.setLayoutParams(params);
+		// Now change ImageView's dimensions to match the scaled image
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view
+				.getLayoutParams();
+		params.width = width;
+		params.height = height;
+		view.setLayoutParams(params);
 
-	    Log.i("Test", "done");
+		Log.i("Test", "done");
 	}
 
-	private int dpToPx(int dp)
-	{
-	    float density = getApplicationContext().getResources().getDisplayMetrics().density;
-	    return Math.round((float)dp * density);
+	private int dpToPx(int dp) {
+		float density = getApplicationContext().getResources()
+				.getDisplayMetrics().density;
+		return Math.round((float) dp * density);
 	}
-	
-	private class ReviewListAdpter extends ArrayAdapter<Review>
-	{
+
+	private class ReviewListAdpter extends ArrayAdapter<Review> {
 		Context context;
 		ArrayList<Review> reviews;
-		
+
 		public ReviewListAdpter(Context context, ArrayList<Review> reviews) {
 			super(context, R.layout.row_wine_review, reviews);
 			this.context = context;
 			this.reviews = reviews;
 		}
-		
+
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent)
-		{
-			if(convertView == null)
-			{
-				LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflator.inflate(R.layout.row_wine_review, parent, false);
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				LayoutInflater inflator = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflator.inflate(R.layout.row_wine_review,
+						parent, false);
 			}
-			
+
 			Review review = reviews.get(position);
-			TextView userView = (TextView) convertView.findViewById(R.id.review_user);
-			RatingBar ratingView = (RatingBar) convertView.findViewById(R.id.wine_review_rating);
-			TextView reviewView = (TextView) convertView.findViewById(R.id.wine_review);
-			
+			TextView userView = (TextView) convertView
+					.findViewById(R.id.review_user);
+			RatingBar ratingView = (RatingBar) convertView
+					.findViewById(R.id.wine_review_rating);
+			TextView reviewView = (TextView) convertView
+					.findViewById(R.id.wine_review);
+
 			userView.setText(review.getUser().getUsername());
 			ratingView.setRating(review.getRating());
 			reviewView.setText(review.getComment());
-			
+
 			return convertView;
 		}
 	}
