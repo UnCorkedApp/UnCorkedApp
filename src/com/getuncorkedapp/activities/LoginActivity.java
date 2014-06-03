@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class LoginActivity extends Activity {
 	private Button registerButton;
 	private Button loginButton;
 	private Context loginContext;
+	private CheckBox checkbox;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,11 @@ public class LoginActivity extends Activity {
 		passwordField = (EditText) findViewById(R.id.password);
 		registerButton = (Button) findViewById(R.id.register);
 		loginButton = (Button) findViewById(R.id.login);
+		checkbox = (CheckBox) findViewById(R.id.remember);
 
 		ParseAnalytics.trackAppOpened(getIntent());
+		
+		
 
 		loginButton.setOnClickListener(new OnClickListener() {
 

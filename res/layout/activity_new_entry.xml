@@ -57,7 +57,7 @@
         android:ems="10"
         android:hint="@string/winery"
         android:inputType="text" />
-
+    
     <EditText
         android:id="@+id/wine_name"
         android:layout_width="wrap_content"

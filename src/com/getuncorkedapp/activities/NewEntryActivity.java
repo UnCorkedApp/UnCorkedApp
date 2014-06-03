@@ -3,8 +3,6 @@ package com.getuncorkedapp.activities;
 import java.io.ByteArrayOutputStream;
 
 import com.getuncorkedapp.utils.BitmapProcessor;
-import com.getuncorkedapp.utils.ParseKeys;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import com.getuncorkedapp.R;
 import com.getuncorkedapp.application.ParseApp;
-import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
@@ -125,6 +122,7 @@ public class NewEntryActivity extends Activity {
                 Intent second = new Intent(NewEntryActivity.this,
 						WineListActivity.class);
 				startActivity(second);
+				finish();
 				 
 			}
 		});
@@ -135,6 +133,7 @@ public class NewEntryActivity extends Activity {
 				Intent second = new Intent(NewEntryActivity.this,
 						WineListActivity.class);
 				startActivity(second);
+				finish();
 			}
 		});
 	}
@@ -150,8 +149,6 @@ public class NewEntryActivity extends Activity {
 				Toast.makeText(NewEntryActivity.this,
 						String.valueOf(ratingBar.getRating()),
 						Toast.LENGTH_SHORT).show();
-
-				// Parse.add(String.valueOf(rating));
 
 			}
 		});
@@ -185,8 +182,8 @@ public class NewEntryActivity extends Activity {
 	 * @param newImage
 	 */
 	private void updateImageView(Bitmap newImage) {
-		BitmapProcessor bitmapProcessor = new BitmapProcessor(newImage, 100,
-				100);
+		BitmapProcessor bitmapProcessor = new BitmapProcessor(newImage, 600,
+				600);
 
 		image = bitmapProcessor.getBitmap();
 		this.imageView.setImageBitmap(image);

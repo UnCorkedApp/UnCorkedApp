@@ -16,5 +16,12 @@
 	<string name="view_wind_title_default">Wine Name</string>
 	<string name="winery_and_year">Winery (Year)</string>
 	<string name="wine_img_content_desc">This is an image of the wine you are viewing.</string>
-	
+	<string name="action_add">Add</string>
+	<string name="review_user_default">User</string>
+	<string name="wine_review_default">This is a wine review.</string>
+	<string name="review_button_text">New Review</string>
+	<string name="add_review_title">Add Review</string>
+	<string name="new_review_comment_title">Comment</string>
+	<string name="add_review_button_text">Add Review</string>
+	<string name="remember_me">Remember Me</string>
 </resources>
