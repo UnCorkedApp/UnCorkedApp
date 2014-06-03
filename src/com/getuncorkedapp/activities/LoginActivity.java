@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,16 +44,28 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
-		SharedPreferences userInfo = getSharedPreferences(USERINFO, MODE_PRIVATE);
+		loginContext = this;
+		
+		SharedPreferences userInfo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		
 		String uname = userInfo.getString("username", null);
 		String pword = userInfo.getString("password", null);
 		
-		if (uname != null && pword != null) {
-			checkAccount(uname, pword, true);
-		}
+		Log.i("LoginAct", uname + "");
+		Log.i("LoginAct", pword + "");
 		
-		loginContext = this;
+		if (uname != null && pword != null ) {
+			Log.i("LoginAct", "attempting to login");
+			if ( checkAccount(uname, pword, true) ) {
+				Toast.makeText(loginContext,
+						"You have Login from Saved Info",
+						Toast.LENGTH_SHORT).show();
+				Intent wineList = new Intent(LoginActivity.this,
+						WineListActivity.class);
+				startActivity(wineList);
+				finish();
+			}
+		}
 
 		usernameField = (EditText) findViewById(R.id.username);
 		passwordField = (EditText) findViewById(R.id.password);
@@ -138,13 +152,14 @@ public class LoginActivity extends Activity {
 	}
 
 	private void persistUser(User user) {
-		SharedPreferences userInfo = getSharedPreferences("USERINFO", MODE_PRIVATE);
+		SharedPreferences userInfo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		Editor edit = userInfo.edit();
 		edit.clear();
 		edit.putString( "username", user.getUsername() );
 		try {
-			edit.putString( "password", hashPassword( user.getPassword() ) );
+			edit.putString( "password", hashPassword(user.getPassword()) );
 		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		edit.commit();
