@@ -170,7 +170,6 @@ public class ViewWineActivity extends Activity {
 				reviewScore = ((float) reviewSum) / list.size();
 				wineRating.setRating(reviewScore);
 				reviewList = new ArrayList<Review>(list);
-				wineReviewList.postInvalidate();
 			}
 		});
 	}
