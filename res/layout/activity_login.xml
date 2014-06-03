@@ -3,35 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/username"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/register"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/username"
-        android:layout_below="@+id/password"
-        android:layout_marginTop="15dp"
-        android:text="@string/register" />
 
-    <Button
-        android:id="@+id/login"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/username"
-        android:layout_alignTop="@+id/register"
-        android:text="@string/login" />
 
     <EditText
         android:id="@+id/username"
@@ -43,6 +16,26 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textEmailAddress" />
+    
+        <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/login"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/username"
+        android:layout_alignTop="@+id/register"
+        android:text="@string/login" />
 
     <ImageView
         android:id="@+id/imageView1"
@@ -51,6 +44,25 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp"
+        android:contentDescription="@string/app_name"
         android:src="@drawable/ic_launcher" />
+
+    <Button
+        android:id="@+id/register"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/username"
+        android:layout_below="@+id/password"
+        android:layout_marginTop="51dp"
+        android:text="@string/register" />
+
+    <CheckBox
+        android:id="@+id/remember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/register"
+        android:layout_centerVertical="true"
+        android:text="@string/remember_me" />
 
 </RelativeLayout>
