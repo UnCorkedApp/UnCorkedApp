@@ -40,7 +40,7 @@ public class ParseApp extends Application {
 	}
 	
 	public ParseObject getWine() {
-		ParseObject wine = ParseObject.create("Wine");
+		wine = ParseObject.create("Wine");
 		return wine;
 	}
 
@@ -49,7 +49,7 @@ public class ParseApp extends Application {
 	}
 	
 	public ParseObject getReviewParse() {
-		ParseObject reviewParse = ParseObject.create("Review");
+		reviewParse = ParseObject.create("Review");
 		return reviewParse;
 	}
 

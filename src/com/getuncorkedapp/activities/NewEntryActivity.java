@@ -2,7 +2,6 @@ package com.getuncorkedapp.activities;
 
 import java.io.ByteArrayOutputStream;
 
-import com.getuncorkedapp.utils.BitmapProcessor;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -22,8 +22,12 @@ import android.widget.Toast;
 
 import com.getuncorkedapp.R;
 import com.getuncorkedapp.application.ParseApp;
+import com.getuncorkedapp.models.Review;
+import com.getuncorkedapp.utils.BitmapProcessor;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseRelation;
 
 public class NewEntryActivity extends Activity {
 
@@ -36,25 +40,26 @@ public class NewEntryActivity extends Activity {
 	private RatingBar ratingBar;
 	private ParseObject wine;
 	private ParseObject reviewParse;
-
+	private ParseObject user;
 	// Image variables
 	private ImageView imageView;
 	private Button buttonNewPic;
 	private Button buttonImage;
+	private ParseFile imageFile;
 
 	private Bitmap image;
-	
+
 	private static final int IMAGE_PICK = 1;
 	private static final int IMAGE_CAPTURE = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		ParseApp app = (ParseApp) getApplication();
 		wine = app.getWine();
 		reviewParse = app.getReviewParse();
-				
+		user = app.getUser();
 		setContentView(R.layout.activity_new_entry);
 
 		wineName = (EditText) findViewById(R.id.wine_name);
@@ -77,53 +82,10 @@ public class NewEntryActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				
-				String wineNameTxt = wineName.getText().toString();
-				String wineryTxt = winery.getText().toString();
-				String yearTxt = year.getText().toString();
-				int yearInt = Integer.parseInt(yearTxt);
-				String reviewTxt = review.getText().toString();
-				String rating = String.valueOf(ratingBar.getRating());
-				Double ratingD = Double.parseDouble(rating);
-				
-				// Locate the image 
-                Bitmap bitmap = image;
-                // Convert it to byte
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                // Compress image to lower quality scale 1 - 100
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] image = stream.toByteArray();
- 
-                // Create the ParseFile
-                ParseFile file = new ParseFile( wineNameTxt + ".png", image);
-                // Upload the image into Parse Cloud
-                file.saveInBackground();
- 
-                // Create a New Class called "ImageUpload" in Parse
-                //ParseObject upload = new ParseObject("Wine");
- 
-                // Create a column named "ImageFile" and insert the image
-                wine.put("imageFile", file);
-                wine.put("name", wineNameTxt);
-                wine.put("winary", wineryTxt);
-                wine.put("year", yearInt);
-                
-               // ParseObject upload2 = new ParseObject("Review");
-                reviewParse.put("comment", reviewTxt);
-                reviewParse.put("rating", ratingD);
-                
-                // Create the class and the columns
-                wine.saveInBackground();
-                reviewParse.saveInBackground();
-                // Show a simple toast message
-                Toast.makeText(NewEntryActivity.this, "Info Uploaded",
-                        Toast.LENGTH_SHORT).show();
-                
-                Intent second = new Intent(NewEntryActivity.this,
-						WineListActivity.class);
-				startActivity(second);
-				finish();
-				 
+
+				imageFile = addImage();
+				imageFile.saveInBackground(new SaveImageCallback());
+
 			}
 		});
 		cancel.setOnClickListener(new OnClickListener() {
@@ -136,6 +98,60 @@ public class NewEntryActivity extends Activity {
 				finish();
 			}
 		});
+	}
+
+	public ParseObject addWineRelations() {
+		ParseRelation<Review> relation = wine.getRelation("reviews");
+		relation.add((Review) reviewParse);
+		return reviewParse;
+	}
+
+	public ParseObject addReviewRelations() {
+		reviewParse.put("wine", wine);
+		reviewParse.put("user", user);
+		return reviewParse;
+	}
+
+	public ParseObject addToReview() {
+		String reviewTxt = review.getText().toString();
+		String rating = String.valueOf(ratingBar.getRating());
+		Double ratingD = Double.parseDouble(rating);
+
+		reviewParse.put("comment", reviewTxt);
+		reviewParse.put("rating", ratingD);
+		return reviewParse;
+	}
+
+	public ParseFile addImage() {
+		String wineNameTxt = wineName.getText().toString();
+		// Locate the image
+		Bitmap bitmap = image;
+		// Convert it to byte
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		// Compress image to lower quality scale 1 - 100
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		byte[] image = stream.toByteArray();
+
+		// Create the ParseFile
+		ParseFile file = new ParseFile(wineNameTxt + ".png", image);
+		// Upload the image into Parse Cloud
+
+		return file;
+	}
+
+	public ParseObject addToWine(ParseFile file) {
+		String wineNameTxt = wineName.getText().toString();
+		String wineryTxt = winery.getText().toString();
+		String yearTxt = year.getText().toString();
+		int yearInt = Integer.parseInt(yearTxt);
+
+		// Create a column named "ImageFile" and insert the image
+		wine.put("imageFile", file);
+		wine.put("name", wineNameTxt);
+		wine.put("winary", wineryTxt);
+		wine.put("year", yearInt);
+
+		return wine;
 	}
 
 	public void addListenerOnRatingBar() {
@@ -241,15 +257,87 @@ public class NewEntryActivity extends Activity {
 	 * 
 	 * 
 	 */
-	class TakePictureListener implements OnClickListener {
+	private class TakePictureListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			Intent intent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(intent, IMAGE_CAPTURE);
 
-
 		}
+	}
+
+	private class SaveImageCallback extends com.parse.SaveCallback {
+
+		@Override
+		public void done(ParseException arg0) {
+			{
+				if (arg0 == null) {
+					addToWine(imageFile).saveInBackground(new SaveBasicWineCallback());
+				} else {
+					Log.e("SAVE Image", arg0.getLocalizedMessage(), arg0);
+				}
+			}
+		}
+
+	}
+
+	private class SaveBasicWineCallback extends com.parse.SaveCallback {
+
+		@Override
+		public void done(ParseException arg0) {
+			if (arg0 == null) {
+				addToReview().saveInBackground(new SaveBasicReviewCallback());
+			} else {
+				Log.e("Save Basic Wine", arg0.getLocalizedMessage(), arg0);
+
+			}
+		}
+	}
+
+	private class SaveBasicReviewCallback extends com.parse.SaveCallback {
+
+		@Override
+		public void done(ParseException arg0) {
+			if (arg0 == null) {
+				addWineRelations().saveInBackground(new SaveWineRelationsCallback());
+
+			} else {
+				Log.e("Save basic review", arg0.getLocalizedMessage(), arg0);
+			}
+		}
+
+	}
+
+	private class SaveWineRelationsCallback extends com.parse.SaveCallback {
+
+		@Override
+		public void done(ParseException arg0) {
+			if (arg0 == null) {
+				addReviewRelations().saveInBackground(new SaveReviewRelationsCallback());
+			} else {
+				Log.e("Save wine relations", arg0.getLocalizedMessage(), arg0);
+			}
+		}
+
+	}
+
+	private class SaveReviewRelationsCallback extends com.parse.SaveCallback {
+		@Override
+		public void done(ParseException arg0) {
+			if (arg0 == null) {
+				Toast.makeText(NewEntryActivity.this, "Info Uploaded",
+						Toast.LENGTH_SHORT).show();
+
+				Intent second = new Intent(NewEntryActivity.this,
+						WineListActivity.class);
+				startActivity(second);
+				finish();
+			} else {
+				Log.e("Save review relations", arg0.getLocalizedMessage(), arg0);
+			}
+		}
+
 	}
 
 }
