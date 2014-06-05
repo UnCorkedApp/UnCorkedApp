@@ -9,14 +9,15 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" />  
+
+    <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name= "com.getuncorkedapp.application.ParseApp"
+        android:name="com.getuncorkedapp.application.ParseApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -24,9 +25,10 @@
         
         <activity android:label="@string/app_name" android:name="com.getuncorkedapp.activities.LoginActivity"
             android:screenOrientation="portrait">
+
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -50,6 +52,9 @@
             android:screenOrientation="portrait" >
             
         </activity>
-        <activity android:label="@string/app_name" android:name="com.getuncorkedapp.activities.AddReviewActivity"/>
+        <activity
+            android:name="com.getuncorkedapp.activities.AddReviewActivity"
+            android:label="@string/app_name" />
     </application>
+
 </manifest>

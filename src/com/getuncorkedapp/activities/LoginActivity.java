@@ -8,7 +8,11 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,8 +30,11 @@ import com.parse.ParseQuery;
 
 public class LoginActivity extends Activity {
 
+	public static final String USERINFO = "UserInfoFile";
+	
 	private EditText usernameField;
 	private EditText passwordField;
+	private CheckBox rememberMeBox;
 	private Button registerButton;
 	private Button loginButton;
 	private Context loginContext;
@@ -37,11 +44,33 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
+		
 		loginContext = this;
+		
+		SharedPreferences userInfo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		
+		String uname = userInfo.getString("username", null);
+		String pword = userInfo.getString("password", null);
+		
+		Log.i("LoginAct", uname + "");
+		Log.i("LoginAct", pword + "");
+		
+		if (uname != null && pword != null ) {
+			Log.i("LoginAct", "attempting to login");
+			if ( checkAccount(uname, pword, true) ) {
+				Toast.makeText(loginContext,
+						"You have Login from Saved Info",
+						Toast.LENGTH_SHORT).show();
+				Intent wineList = new Intent(LoginActivity.this,
+						WineListActivity.class);
+				startActivity(wineList);
+				finish();
+			}
+		}
 
 		usernameField = (EditText) findViewById(R.id.username);
 		passwordField = (EditText) findViewById(R.id.password);
+		rememberMeBox   = (CheckBox) findViewById(R.id.remember);
 		registerButton = (Button) findViewById(R.id.register);
 		loginButton = (Button) findViewById(R.id.login);
 		checkbox = (CheckBox) findViewById(R.id.remember);
@@ -62,7 +91,7 @@ public class LoginActivity extends Activity {
 					e.printStackTrace();
 				}
 				if (!username.isEmpty()) {
-					if (checkAccount(username, password)) {
+					if ( checkAccount( username, password, rememberMeBox.isChecked() ) ) {
 						Toast.makeText(loginContext,
 								"You have Login Successfully",
 								Toast.LENGTH_SHORT).show();
@@ -94,7 +123,7 @@ public class LoginActivity extends Activity {
 		});
 	}
 
-	private boolean checkAccount(final String username, final String password) {
+	private boolean checkAccount(final String username, final String password, boolean rememberMe) {
 		Boolean check = false;
 		List<User> data = null;
 		ParseObject user = null;
@@ -118,9 +147,27 @@ public class LoginActivity extends Activity {
 				check = true;
 				ParseApp app = (ParseApp) getApplication();
 				app.setUser(user);
+				if (rememberMe) {
+					persistUser( (User) user);
+				}
 			}
 		}
 		return check;
+	}
+
+	private void persistUser(User user) {
+		SharedPreferences userInfo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		Editor edit = userInfo.edit();
+		edit.clear();
+		edit.putString( "username", user.getUsername() );
+		try {
+			edit.putString( "password", hashPassword(user.getPassword()) );
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		edit.commit();
+		Toast.makeText(loginContext, "Login details are saved..", Toast.LENGTH_SHORT).show();
 	}
 
 	public String hashPassword(String pass) throws UnsupportedEncodingException {
