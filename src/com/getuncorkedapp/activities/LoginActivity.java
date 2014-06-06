@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
 	private Button registerButton;
 	private Button loginButton;
 	private Context loginContext;
-	private CheckBox checkbox;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class LoginActivity extends Activity {
 		rememberMeBox   = (CheckBox) findViewById(R.id.remember);
 		registerButton = (Button) findViewById(R.id.register);
 		loginButton = (Button) findViewById(R.id.login);
-		checkbox = (CheckBox) findViewById(R.id.remember);
+		
 
 		ParseAnalytics.trackAppOpened(getIntent());
 		
@@ -140,10 +140,14 @@ public class LoginActivity extends Activity {
 				user = u;
 			}
 		}
+		
 		if (!(user == null)) {
+			
 			if (((String) user.get("password")).equalsIgnoreCase(password)
 					&& ((String) user.get("username"))
 							.equalsIgnoreCase(username)) {
+				Log.e("CheckAccount","PASS");
+				Log.e("CheckAccount",user.get("username")+"");
 				check = true;
 				ParseApp app = (ParseApp) getApplication();
 				app.setUser(user);
@@ -160,12 +164,7 @@ public class LoginActivity extends Activity {
 		Editor edit = userInfo.edit();
 		edit.clear();
 		edit.putString( "username", user.getUsername() );
-		try {
-			edit.putString( "password", hashPassword(user.getPassword()) );
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		edit.putString( "password", user.getPassword() );
 		edit.commit();
 		Toast.makeText(loginContext, "Login details are saved..", Toast.LENGTH_SHORT).show();
 	}
