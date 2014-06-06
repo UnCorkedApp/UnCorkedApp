@@ -236,7 +236,7 @@ public class ViewWineActivity extends Activity
 		}
 		else
 		{
-			wineryYearSB.append(wine.getWinary() + ")");
+			wineryYearSB.append(wine.getYear() + ")");
 		}
 		wineryAndYear.setText(wineryYearSB.toString());
 
