@@ -1,13 +1,13 @@
 package com.getuncorkedapp.application;
 
+import android.app.Application;
+
 import com.getuncorkedapp.models.Review;
 import com.getuncorkedapp.models.User;
 import com.getuncorkedapp.models.Wine;
 import com.getuncorkedapp.utils.ParseKeys;
 import com.parse.Parse;
 import com.parse.ParseObject;
-
-import android.app.Application;
 
 public class ParseApp extends Application {
 

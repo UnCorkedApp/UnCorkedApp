@@ -9,7 +9,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -31,6 +30,7 @@ import android.widget.TextView;
 import com.getuncorkedapp.R;
 import com.getuncorkedapp.application.ParseApp;
 import com.getuncorkedapp.models.Review;
+import com.getuncorkedapp.models.User;
 import com.getuncorkedapp.models.Wine;
 import com.getuncorkedapp.utils.WebImageView;
 import com.parse.FindCallback;
@@ -45,7 +45,8 @@ import com.parse.ParseRelation;
  * @author Loran
  * 
  */
-public class ViewWineActivity extends Activity {
+public class ViewWineActivity extends Activity
+{
 
 	private String wineId;
 	private Wine wine;
@@ -67,7 +68,8 @@ public class ViewWineActivity extends Activity {
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_wine);
 
@@ -87,9 +89,11 @@ public class ViewWineActivity extends Activity {
 		reviewAdapter = new ReviewListAdpter(getApplicationContext(),
 				reviewList);
 
-		wineRating.setOnTouchListener(new OnTouchListener() {
+		wineRating.setOnTouchListener(new OnTouchListener()
+		{
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public boolean onTouch(View v, MotionEvent event)
+			{
 				return true;
 			}
 		});
@@ -106,7 +110,8 @@ public class ViewWineActivity extends Activity {
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
-	public void onResume() {
+	public void onResume()
+	{
 		super.onResume();
 		// TODO Auto-generated method stub
 
@@ -118,7 +123,8 @@ public class ViewWineActivity extends Activity {
 	 * @see android.app.Activity#onPause()
 	 */
 	@Override
-	public void onPause() {
+	public void onPause()
+	{
 		super.onPause();
 		// TODO Auto-generated method stub
 
@@ -130,72 +136,106 @@ public class ViewWineActivity extends Activity {
 	 * @see android.app.Activity#onStop()
 	 */
 	@Override
-	public void onStop() {
+	public void onStop()
+	{
 		super.onStop();
 		// TODO Auto-generated method stub
 
 	}
 
-	public void findWine(String id) {
+	public void findWine(String id)
+	{
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Wine");
 		// query.fromLocalDatastore();
-		query.getInBackground(id, new GetCallback<ParseObject>() {
+		query.getInBackground(id, new GetCallback<ParseObject>()
+		{
 
 			@Override
-			public void done(ParseObject win, ParseException error) {
-				if (win != null) {
+			public void done(ParseObject win, ParseException error)
+			{
+				if (win != null)
+				{
 					wine = (Wine) win;
 					Log.i("Wine", wine.getName());
 					fillInWine(wine);
 					// scaleImage();
 					getReviews(wine);
-				} else {
+				}
+				else
+				{
 					Log.e("ParseException", error.getLocalizedMessage(), error);
 				}
 			}
 		});
 	}
 
-	public void getReviews(Wine wine) {
+	public void getReviews(Wine wine)
+	{
 		Log.i("Get Reviews", "Called");
 		ParseRelation<Review> relation = wine.getRelation("reviews");
-		ParseQuery<Review> query = relation.getQuery();
-		query.addDescendingOrder("updatedAt");
+		ParseQuery<Review> reviewQuery = relation.getQuery();
+		reviewQuery.addDescendingOrder("updatedAt");
 
-		query.findInBackground(new FindCallback<Review>() {
+		reviewQuery.findInBackground(new FindCallback<Review>()
+		{
 
 			@Override
-			public void done(List<Review> list, ParseException e) {
-				if (e == null) {
+			public void done(List<Review> list, ParseException e)
+			{
+				if (e == null)
+				{
 					int reviewSum = 0;
-					for (Review r : list) {
-						Log.i("Add Review to Array Adapter", "Review " + r.toString());
-						if (r.getUser()
-								.getUsername()
-								.equals(((ParseApp) getApplication()).getUser()
-										.get("username"))) {
-							reviewAdapter.insert(r, 0);
-						} else {
-							reviewAdapter.add(r);
-						}
+					for (final Review r : list)
+					{
+						Log.i("Add Review to Array Adapter",
+								"Review " + r.toString());
+
+						r.getUser().fetchInBackground(new GetCallback<User>()
+						{
+
+							@Override
+							public void done(User arg0, ParseException arg1)
+							{
+								if (arg0.getUsername() != null
+										&& arg0.getUsername().equals(
+												((ParseApp) getApplication())
+														.getUser()))
+								{
+									reviewAdapter.insert(r, 0);
+								}
+								else
+								{
+									reviewAdapter.add(r);
+								}
+							}
+
+						});
+
 						reviewSum += r.getRating();
 					}
 					reviewScore = ((float) reviewSum) / list.size();
+					Log.i("Set Rating", reviewScore + "");
 					wineRating.setRating(reviewScore);
-				} else {
+				}
+				else
+				{
 					Log.e("Get Reviews Excep", e.getLocalizedMessage(), e);
 				}
 			}
 		});
 	}
 
-	public void fillInWine(Wine wine) {
+	public void fillInWine(Wine wine)
+	{
 		wineName.setText(wine.getName());
 		wineIcon.setImageUrl(wine.getImageFile().getUrl());
 		wineryYearSB.append(wine.getWinary() + "(");
-		if (wine.getYear() == 0) {
+		if (wine.getYear() == 0)
+		{
 			wineryYearSB.append("N/A" + ")");
-		} else {
+		}
+		else
+		{
 			wineryYearSB.append(wine.getWinary() + ")");
 		}
 		wineryAndYear.setText(wineryYearSB.toString());
@@ -203,21 +243,25 @@ public class ViewWineActivity extends Activity {
 	}
 
 	private class ReviewButtonListener implements
-			android.view.View.OnClickListener {
+			android.view.View.OnClickListener
+	{
 
 		@Override
-		public void onClick(View v) {
+		public void onClick(View v)
+		{
 			// TODO Auto-generated method stub
 
 		}
 
 	}
 
-	private void scaleImage() {
+	private void scaleImage()
+	{
 		// Get the ImageView and its bitmap
 		WebImageView view = (WebImageView) findViewById(R.id.wineIcon);
 		Drawable drawing = view.getDrawable();
-		if (drawing == null) {
+		if (drawing == null)
+		{
 			return; // Checking for null & return, as suggested in comments
 		}
 		Bitmap bitmap = ((BitmapDrawable) drawing).getBitmap();
@@ -267,25 +311,30 @@ public class ViewWineActivity extends Activity {
 		Log.i("Test", "done");
 	}
 
-	private int dpToPx(int dp) {
+	private int dpToPx(int dp)
+	{
 		float density = getApplicationContext().getResources()
 				.getDisplayMetrics().density;
 		return Math.round((float) dp * density);
 	}
 
-	private class ReviewListAdpter extends ArrayAdapter<Review> {
+	private class ReviewListAdpter extends ArrayAdapter<Review>
+	{
 		Context context;
 		ArrayList<Review> reviews;
 
-		public ReviewListAdpter(Context context, ArrayList<Review> reviews) {
+		public ReviewListAdpter(Context context, ArrayList<Review> reviews)
+		{
 			super(context, R.layout.row_wine_review, reviews);
 			this.context = context;
 			this.reviews = reviews;
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
+			if (convertView == null)
+			{
 				LayoutInflater inflator = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflator.inflate(R.layout.row_wine_review,
@@ -295,13 +344,31 @@ public class ViewWineActivity extends Activity {
 			Review review = reviews.get(position);
 			TextView userView = (TextView) convertView
 					.findViewById(R.id.review_user);
+
 			RatingBar ratingView = (RatingBar) convertView
 					.findViewById(R.id.wine_review_rating);
 			TextView reviewView = (TextView) convertView
 					.findViewById(R.id.wine_review);
 
-			userView.setText(review.getUser().getUsername());
+			if (review.getUser().getUsername() != null)
+			{
+				userView.setText(review.getUser().getUsername());
+			}
+			else
+			{
+				userView.setText(R.string.review_user_default);
+			}
+
 			ratingView.setRating(review.getRating());
+			ratingView.setOnTouchListener(new OnTouchListener()
+			{
+				@Override
+				public boolean onTouch(View v, MotionEvent event)
+				{
+					return true;
+				}
+			});
+			ratingView.setFocusable(false);
 			reviewView.setText(review.getComment());
 
 			return convertView;
