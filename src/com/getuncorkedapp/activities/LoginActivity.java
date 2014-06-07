@@ -49,15 +49,15 @@ public class LoginActivity extends Activity {
 		
 		SharedPreferences userInfo = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		
-		String uname = userInfo.getString("username", null);
-		String pword = userInfo.getString("password", null);
+		String uname = userInfo.getString("username", "");
+		String pword = userInfo.getString("password", "");
 		
-		Log.i("LoginAct", uname + "");
-		Log.i("LoginAct", pword + "");
+		Log.i("LoginAct", uname);
+		Log.i("LoginAct", pword);
 		
-		if (uname != null && pword != null ) {
+		if (!uname.isEmpty() && !pword.isEmpty() ) {
 			Log.i("LoginAct", "attempting to login");
-			if ( checkAccount(uname, pword, true) ) {
+			if ( checkAccount(uname, pword, false) ) {
 				Toast.makeText(loginContext,
 						"You have Login from Saved Info",
 						Toast.LENGTH_SHORT).show();
