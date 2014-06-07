@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.getuncorkedapp.R;
-import com.getuncorkedapp.application.ParseApp;
 import com.getuncorkedapp.models.User;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -45,7 +44,6 @@ public class RegisterActivity extends Activity {
 		setContentView(R.layout.activity_register);
 		RegisterContext = this;
 		
-		ParseApp app = (ParseApp) getApplication();
 		user = ParseObject.create("User");
 
 //		Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);

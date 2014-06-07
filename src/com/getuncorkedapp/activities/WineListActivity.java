@@ -27,7 +27,8 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-public class WineListActivity extends Activity {
+public class WineListActivity extends Activity
+{
 
 	private ListView wineList;
 	private WineAdapter wineAdapter;
@@ -35,7 +36,8 @@ public class WineListActivity extends Activity {
 	public final String ALL_WINES = "AllWines";
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wine_list);
 
@@ -46,14 +48,16 @@ public class WineListActivity extends Activity {
 		wineAdapter = new WineAdapter(this, new ArrayList<Wine>());
 		wineList.setAdapter(wineAdapter);
 
-		wineList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		wineList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+				int position, long id)
+			{
 				Wine wine = wineAdapter.getItem(position);
 				Intent intent = new Intent().setClass(parent.getContext(),
-						ViewWineActivity.class);
+					ViewWineActivity.class);
 				intent.putExtra(WINE_ID_EXTRA, wine.getObjectId());
 				Log.i("WineListActivity", wine.getObjectId());
 				startActivity(intent);
@@ -66,7 +70,8 @@ public class WineListActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		// Inflate the menu items for use in the action bar
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.wine_list_activity_actions, menu);
@@ -74,24 +79,26 @@ public class WineListActivity extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle presses on the action bar items
-		switch (item.getItemId()) {
+		switch (item.getItemId())
+		{
 		case R.id.action_add:
 			Intent intent = new Intent().setClass(getApplicationContext(),
-					NewEntryActivity.class);
+				NewEntryActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.userdisplay:
 			ParseApp app = (ParseApp) getApplication();
 			app.setUser(null);
 			SharedPreferences userInfo = PreferenceManager
-					.getDefaultSharedPreferences(getApplicationContext());
+				.getDefaultSharedPreferences(getApplicationContext());
 			Editor edit = userInfo.edit();
 			edit.clear();
 			edit.commit();
 			Intent intent2 = new Intent().setClass(getApplicationContext(),
-					LoginActivity.class);
+				LoginActivity.class);
 			startActivity(intent2);
 			finish();
 			return true;
@@ -100,16 +107,21 @@ public class WineListActivity extends Activity {
 		}
 	}
 
-	public void fetchData() {
+	public void fetchData()
+	{
 
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Wine");
-		query.findInBackground(new FindCallback<ParseObject>() {
+		query.findInBackground(new FindCallback<ParseObject>()
+		{
 
 			@Override
-			public void done(List<ParseObject> wines, ParseException error) {
-				if (wines != null) {
+			public void done(List<ParseObject> wines, ParseException error)
+			{
+				if (wines != null)
+				{
 					wineAdapter.clear();
-					for (ParseObject wine : wines) {
+					for (ParseObject wine : wines)
+					{
 						wineAdapter.add((Wine) wine);
 						Log.i("WineListActivity", wine.getString("name"));
 					}
@@ -117,7 +129,9 @@ public class WineListActivity extends Activity {
 					ParseObject.unpinAllInBackground(ALL_WINES);
 					// store local cache
 					ParseObject.pinAllInBackground(ALL_WINES, wines);
-				} else {
+				}
+				else
+				{
 					Log.e("WineListActivity", error.getLocalizedMessage());
 					return;
 				}
