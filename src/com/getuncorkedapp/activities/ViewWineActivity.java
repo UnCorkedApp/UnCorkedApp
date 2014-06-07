@@ -7,13 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,11 +50,13 @@ import com.parse.ParseRelation;
  */
 public class ViewWineActivity extends Activity
 {
+	public static final String UPDATE_REVIEWS_ACTION = "com.getuncorkedapp.ViewWineActivity.UPDATE_REVIEWS";
 
 	private String wineId;
 	private Wine wine;
 	private ArrayList<Review> reviewList;
 	private float reviewScore;
+	private ParseApp app;
 
 	private TextView wineName;
 	private WebImageView wineIcon;
@@ -61,6 +66,7 @@ public class ViewWineActivity extends Activity
 	private Button addReviewButton;
 	private RatingBar wineRating;
 	private ReviewListAdpter reviewAdapter;
+	private ViewWineBroadcastReceiver localBroadcastReceiver;
 
 	/*
 	 * (non-Javadoc)
@@ -72,6 +78,14 @@ public class ViewWineActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_wine);
+		app = (ParseApp) getApplication();
+
+		LocalBroadcastManager bManager = LocalBroadcastManager
+			.getInstance(this);
+		localBroadcastReceiver = new ViewWineBroadcastReceiver();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(UPDATE_REVIEWS_ACTION);
+		bManager.registerReceiver(localBroadcastReceiver, intentFilter);
 
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
@@ -87,7 +101,7 @@ public class ViewWineActivity extends Activity
 		addReviewButton = (Button) findViewById(R.id.new_review_button);
 		wineRating = (RatingBar) findViewById(R.id.view_wine_rating_bar);
 		reviewAdapter = new ReviewListAdpter(getApplicationContext(),
-				reviewList);
+			reviewList);
 
 		wineRating.setOnTouchListener(new OnTouchListener()
 		{
@@ -187,8 +201,8 @@ public class ViewWineActivity extends Activity
 					int reviewSum = 0;
 					for (final Review r : list)
 					{
-						Log.i("Add Review to Array Adapter",
-								"Review " + r.toString());
+						Log.i("Add Review to Array Adapter", "Review "
+							+ r.toString());
 
 						r.getUser().fetchInBackground(new GetCallback<User>()
 						{
@@ -197,9 +211,8 @@ public class ViewWineActivity extends Activity
 							public void done(User arg0, ParseException arg1)
 							{
 								if (arg0.getUsername() != null
-										&& arg0.getUsername().equals(
-												((ParseApp) getApplication())
-														.getUser()))
+									&& arg0.getObjectId().equals(
+										(app.getUser().getObjectId())))
 								{
 									reviewAdapter.insert(r, 0);
 								}
@@ -243,18 +256,21 @@ public class ViewWineActivity extends Activity
 	}
 
 	private class ReviewButtonListener implements
-			android.view.View.OnClickListener
+		android.view.View.OnClickListener
 	{
-
 		@Override
 		public void onClick(View v)
 		{
-			// TODO Auto-generated method stub
-
+			Intent startAddReviewIntent = new Intent(getApplicationContext(),
+				AddReviewActivity.class);
+			Bundle extras = new Bundle();
+			extras.putString(WineListActivity.WINE_ID_EXTRA, wineId);
+			startAddReviewIntent.putExtras(extras);
+			startActivity(startAddReviewIntent);
 		}
-
 	}
 
+	//Currently untested, so unused
 	private void scaleImage()
 	{
 		// Get the ImageView and its bitmap
@@ -291,7 +307,7 @@ public class ViewWineActivity extends Activity
 		// Create a new bitmap and convert it to a format understood by the
 		// ImageView
 		Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,
-				matrix, true);
+			matrix, true);
 		width = scaledBitmap.getWidth(); // re-use
 		height = scaledBitmap.getHeight(); // re-use
 		BitmapDrawable result = new BitmapDrawable(getResources(), scaledBitmap);
@@ -303,7 +319,7 @@ public class ViewWineActivity extends Activity
 
 		// Now change ImageView's dimensions to match the scaled image
 		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view
-				.getLayoutParams();
+			.getLayoutParams();
 		params.width = width;
 		params.height = height;
 		view.setLayoutParams(params);
@@ -314,7 +330,7 @@ public class ViewWineActivity extends Activity
 	private int dpToPx(int dp)
 	{
 		float density = getApplicationContext().getResources()
-				.getDisplayMetrics().density;
+			.getDisplayMetrics().density;
 		return Math.round((float) dp * density);
 	}
 
@@ -336,19 +352,19 @@ public class ViewWineActivity extends Activity
 			if (convertView == null)
 			{
 				LayoutInflater inflator = (LayoutInflater) context
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflator.inflate(R.layout.row_wine_review,
-						parent, false);
+					parent, false);
 			}
 
 			Review review = reviews.get(position);
 			TextView userView = (TextView) convertView
-					.findViewById(R.id.review_user);
+				.findViewById(R.id.review_user);
 
 			RatingBar ratingView = (RatingBar) convertView
-					.findViewById(R.id.wine_review_rating);
+				.findViewById(R.id.wine_review_rating);
 			TextView reviewView = (TextView) convertView
-					.findViewById(R.id.wine_review);
+				.findViewById(R.id.wine_review);
 
 			if (review.getUser().getUsername() != null)
 			{
@@ -373,6 +389,26 @@ public class ViewWineActivity extends Activity
 
 			return convertView;
 		}
+	}
+
+	private class ViewWineBroadcastReceiver extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			if (intent.getAction() == UPDATE_REVIEWS_ACTION)
+			{
+				if (intent.getExtras()
+					.getString(WineListActivity.WINE_ID_EXTRA).equals(
+						wine.getObjectId()))
+				{
+					reviewAdapter.clear();
+					getReviews(wine);
+				}
+			}
+		}
+
 	}
 
 }

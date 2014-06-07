@@ -46,7 +46,7 @@ public class RegisterActivity extends Activity {
 		RegisterContext = this;
 		
 		ParseApp app = (ParseApp) getApplication();
-		user = app.getUser();
+		user = ParseObject.create("User");
 
 //		Parse.initialize(this, ParseKeys.APPID, ParseKeys.CLIENTKEY);
 		ParseAnalytics.trackAppOpened(getIntent());

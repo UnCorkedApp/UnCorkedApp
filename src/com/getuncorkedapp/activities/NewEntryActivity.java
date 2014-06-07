@@ -57,8 +57,8 @@ public class NewEntryActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		ParseApp app = (ParseApp) getApplication();
-		wine = app.getWine();
-		reviewParse = app.getReviewParse();
+		wine = ParseObject.create("Wine");
+		reviewParse = ParseObject.create("Review");
 		user = app.getUser();
 		setContentView(R.layout.activity_new_entry);
 
